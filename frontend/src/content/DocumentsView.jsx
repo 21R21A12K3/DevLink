@@ -1,20 +1,18 @@
 // src/components/content/DocumentsView.jsx
 import React, { useState, useEffect } from "react";
+import { getDocuments } from "../api/apiService";
 
 const DocumentsView = ({ searchTerm }) => {
   const [data, setData] = useState([]);
   const handleLoading = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/documents");
-      if (res.ok) {
-        console.log("Successfully Done");
-      }
-      const data = await res.json();
-      setData(data);
-      console.log(data);
-    } catch (err) {
-      console.log(err);
+    const res = await getDocuments();
+    if(!res.success){
+      console.error("Error fetching documents:", res.error);
+      return;
     }
+    const data = res.data;
+    setData(data);
+    console.log("Documents fetched successfully:", data);
   };
   useEffect(() => {
     handleLoading();

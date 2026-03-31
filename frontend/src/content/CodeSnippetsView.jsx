@@ -1,17 +1,19 @@
 // src/components/content/CodeSnippetsView.jsx
 import React, { useState, useEffect } from "react";
+import { getCodesnippets } from "../api/apiService";
 
 const CodeSnippetsView = ({ searchTerm }) => {
   const [data, setData] = useState([]);
   const handleLoading = async () => {
-    const res = await fetch("http://localhost:5000/api/codesnippets");
-    if (res.ok) {
-      console.log("Successfully Done");
+    const res = await getCodesnippets();
+    if(!res.success){
+      console.error("Error fetching code snippets:", res.error);
+      return;
     }
-    const data = await res.json();
+    const data = res.data;
     setData(data);
-    console.log(data);
-  };
+    console.log("Code snippets fetched successfully:", data);
+  }
   useEffect(() => {
     handleLoading();
   }, []);

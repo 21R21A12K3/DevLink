@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { getYoutubevideos } from "../api/apiService";
 
 const YoutubeVideosView = ({ searchTerm }) => {
   const [data, setData] = useState([]);
   const handleLoading = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/youtube-videos");
-      if (res.ok) {
-        console.log("Successfully Done");
-      }
-      const data = await res.json();
-      setData(data);
-      console.log(data);
-    } catch (err) {
-      console.log(err);
+    const res = await getYoutubevideos();
+    if(!res.success){
+      console.error("Error fetching YouTube videos:", res.error);
+      return;
     }
+    const data = res.data;
+    setData(data);
+    console.log("YouTube videos fetched successfully:", data);
   };
   useEffect(() => {
     handleLoading();

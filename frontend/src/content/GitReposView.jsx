@@ -1,16 +1,18 @@
 // src/components/content/GitReposView.jsx
 import React, { useState, useEffect } from "react";
+import { getGitrepos } from "../api/apiService";
 
 const GitReposView = ({ searchTerm }) => {
   const [data, setData] = useState([]);
   const handleLoading = async () => {
-    const res = await fetch("http://localhost:5000/api/git");
-    if (res.ok) {
-      console.log("Successfully Done");
+    const res = await getGitrepos();
+    if(!res.success){
+      console.error("Error fetching Git repositories:", res.error);
+      return;
     }
-    const data = await res.json();
+    const data = res.data;
     setData(data);
-    console.log(data);
+    console.log("Git repositories fetched successfully:", data);
   };
   useEffect(() => {
     handleLoading();
